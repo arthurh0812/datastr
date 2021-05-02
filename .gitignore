@@ -1,0 +1,15 @@
+# Docker
+.dockerignore
+
+# Nodejs
+node_modules/
+
+# Go
+vendor/
+
+# Binaries
+*.exe
+
+# Environment variables
+*.env
+*secret.yaml
