@@ -143,6 +143,14 @@ func (l *LinkedList) init(n *node) {
 	l.mu.Unlock()
 }
 
+func (l *LinkedList) clear() {
+	l.mu.Lock()
+	l.head = nil
+	l.tail = nil
+	l.len = 0
+	l.mu.Unlock()
+}
+
 func New(val interface{}, next *LinkedList) *LinkedList {
 	var nextLen int64
 	var nextHead *node
@@ -155,4 +163,8 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 	ll.init(initNode)
 	ll.len = 1 + nextLen
 	return ll
+}
+
+func (l *LinkedList) Clear() {
+	l.clear()
 }
