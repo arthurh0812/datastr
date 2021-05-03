@@ -40,15 +40,15 @@ func (l *LinkedList) append(n *node) {
 	if n.next != nil { // make sure the node doesnt hold a reference to anywhere else
 		n.next = nil
 	}
+	l.mu.Lock()
 	l.tail.next = n
 	l.tail = n
 	l.len++
+	l.mu.Unlock()
 }
 
 func (l *LinkedList) Append(val interface{}) {
 	newNode := &node{val: val, next: nil}
-	l.mu.Unlock()
-	defer l.mu.Unlock()
 	if l.IsEmpty() { // special case for empty list
 		l.init(newNode)
 		return
@@ -58,22 +58,24 @@ func (l *LinkedList) Append(val interface{}) {
 
 func (l *LinkedList) Prepend(val interface{}) {
 	newNode := &node{val: val}
-	l.mu.Lock()
-	defer l.mu.Unlock()
 	l.prepend(newNode)
 }
 
 // adds node 'after' after curr
 func (l *LinkedList) insert(curr, after *node) {
+	l.mu.Lock()
 	after.next = curr.next
 	curr.next = after
 	l.len++
+	l.mu.Unlock()
 }
 
 func (l *LinkedList) prepend(pre *node) {
+	l.mu.Lock()
 	pre.next = l.head
 	l.head = pre
 	l.len++
+	l.mu.Unlock()
 }
 
 func (l *LinkedList) traverse(idx int64) *node {
@@ -134,9 +136,11 @@ func (l *LinkedList) init(n *node) {
 	if n == nil {
 		return
 	}
+	l.mu.Lock()
 	l.head = n
 	l.tail = n
 	l.len = 1
+	l.mu.Unlock()
 }
 
 func New(val interface{}, next *LinkedList) *LinkedList {
@@ -147,9 +151,8 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 		nextHead = next.head
 	}
 	initNode := &node{val: val, next: nextHead}
-	return &LinkedList{
-		head: initNode,
-		tail: initNode,
-		len: 1 + nextLen,
-	}
+	ll := &LinkedList{}
+	ll.init(initNode)
+	ll.len = 1 + nextLen
+	return ll
 }
