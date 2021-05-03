@@ -47,8 +47,16 @@ func (l *LinkedList) append(n *node) {
 	l.mu.Unlock()
 }
 
+func (l *LinkedList) prepend(n *node) {
+	l.mu.Lock()
+	n.next = l.head
+	l.head = n
+	l.len++
+	l.mu.Unlock()
+}
+
 func (l *LinkedList) Append(val interface{}) {
-	newNode := &node{val: val, next: nil}
+	newNode := &node{val: val}
 	if l.IsEmpty() { // special case for empty list
 		l.init(newNode)
 		return
@@ -58,6 +66,10 @@ func (l *LinkedList) Append(val interface{}) {
 
 func (l *LinkedList) Prepend(val interface{}) {
 	newNode := &node{val: val}
+	if l.IsEmpty() { // special case for empty list
+		l.init(newNode)
+		return
+	}
 	l.prepend(newNode)
 }
 
@@ -66,14 +78,6 @@ func (l *LinkedList) insert(curr, after *node) {
 	l.mu.Lock()
 	after.next = curr.next
 	curr.next = after
-	l.len++
-	l.mu.Unlock()
-}
-
-func (l *LinkedList) prepend(pre *node) {
-	l.mu.Lock()
-	pre.next = l.head
-	l.head = pre
 	l.len++
 	l.mu.Unlock()
 }
@@ -137,6 +141,7 @@ func (l *LinkedList) init(n *node) {
 	if n == nil {
 		return
 	}
+	n.next = nil
 	l.mu.Lock()
 	l.head = n
 	l.tail = n
@@ -163,9 +168,10 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 		nextLen = next.len
 		nextHead = next.head
 	}
-	initNode := &node{val: val, next: nextHead}
+	initNode := &node{val: val}
 	ll := &LinkedList{}
 	ll.init(initNode)
+	initNode.next = nextHead
 	ll.len += nextLen
 	return ll
 }
