@@ -128,6 +128,7 @@ func (l *LinkedList) InsertWhere(val, whereVal interface{}) {
 func Empty() *LinkedList {
 	return &LinkedList{
 		head: nil,
+		tail: nil,
 		len: 0,
 	}
 }
@@ -151,6 +152,10 @@ func (l *LinkedList) clear() {
 	l.mu.Unlock()
 }
 
+func (l *LinkedList) Clear() {
+	l.clear()
+}
+
 func New(val interface{}, next *LinkedList) *LinkedList {
 	var nextLen int64
 	var nextHead *node
@@ -161,10 +166,6 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 	initNode := &node{val: val, next: nextHead}
 	ll := &LinkedList{}
 	ll.init(initNode)
-	ll.len = 1 + nextLen
+	ll.len += nextLen
 	return ll
-}
-
-func (l *LinkedList) Clear() {
-	l.clear()
 }
