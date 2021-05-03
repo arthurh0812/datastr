@@ -84,17 +84,7 @@ func (l *LinkedList) traverse(idx int64) *node {
 	return trav
 }
 
-func (l *LinkedList) search(val interface{}) *node {
-	search := l.head
-	for search != nil {
-		if search.val == val {
-			return search
-		}
-		search = search.next
-	}
-	return nil
-}
-
+// traverses to the most previous node of the node with a value match
 func (l *LinkedList) where(val interface{}) *node {
 	search := l.head
 	for next := search.next; search != nil && next != nil; search = search.next {
@@ -127,9 +117,9 @@ func (l *LinkedList) InsertWhere(val, whereVal interface{}) {
 		l.prepend(newNode)
 		return
 	}
-	preSearched := l.where(whereVal)
-	if preSearched != nil { // if a match has been found
-		l.insert(preSearched, newNode)
+	prevSearched := l.where(whereVal)
+	if prevSearched != nil { // if a match has been found
+		l.insert(prevSearched, newNode)
 	}
 }
 
@@ -163,5 +153,3 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 		len: 1 + nextLen,
 	}
 }
-
-
