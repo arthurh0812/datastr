@@ -83,6 +83,9 @@ func (l *LinkedList) insert(curr, after *node) {
 }
 
 func (l *LinkedList) traverse(idx int64) *node {
+	if idx < 0 || l.len < idx {
+		return nil
+	}
 	trav := l.head
 	for i := int64(0); i < idx; i++ {
 		trav = trav.next
