@@ -37,11 +37,11 @@ func (l *LinkedList) IsEmpty() bool {
 }
 
 func (l *LinkedList) append(n *node) {
+	l.mu.Lock()
 	if n != nil {
 		n.next = nil
 		n.prev = l.tail
 	}
-	l.mu.Lock()
 	l.tail.next = n
 	l.tail = n
 	l.len++
@@ -49,20 +49,82 @@ func (l *LinkedList) append(n *node) {
 }
 
 func (l *LinkedList) prepend(n *node) {
+	l.mu.Lock()
 	if n != nil {
 		n.prev = nil
 		n.next = l.head
 	}
-	l.mu.Lock()
 	l.head.prev = n
 	l.head = n
 	l.len++
 	l.mu.Unlock()
 }
 
+func (l *LinkedList) insertAfter(first, second *node) {
+	second.next = first.next
+	first.next = second
+	second.prev = first
+	l.mu.Lock()
+	l.len++
+	l.mu.Unlock()
+}
+
+func (l *LinkedList) insertBefore(first, second *node) {
+	second.prev = first.prev
+	first.prev = second
+	second.next = first
+	l.mu.Lock()
+	l.len++
+	l.mu.Unlock()
+}
+
+func (l *LinkedList) traverseUp(n int64) *node {
+	trav := l.head
+	for i := int64(0); i < n; i++ {
+		if trav == nil {
+			return nil
+		}
+		trav = trav.next
+	}
+	return trav
+}
+
+func (l *LinkedList) traverseDown(n int64) *node {
+	trav := l.tail
+	for i := l.len-1; i > n; i-- {
+		if trav == nil {
+			return nil
+		}
+		trav = trav.next
+	}
+	return trav
+}
+
+// returns the node at index 'idx' (zero-based)
+func (l *LinkedList) traverse(idx int64) *node {
+	if idx < 0 || l.len <= idx {
+		return nil
+	}
+	mid := l.len / 2
+	if idx < mid { // traverse list starting at head
+		return l.traverseUp(idx)
+	} else { // traverse list starting at tail
+		return l.traverseDown(idx)
+	}
+}
+
+func (l *LinkedList) where(val interface{}) *node {
+	for trav := l.head; trav != nil; trav = trav.next {
+		if trav.val == val {
+			return trav
+		}
+	}
+	return nil
+}
+
 func (l *LinkedList) Append(val interface{}) {
 	newNode := &node{val: val}
-	if l.IsEmpty() {
+	if l.IsEmpty() { // empty list case is always the same, no matter prepend/append etc.
 		l.init(newNode)
 		return
 	}
@@ -71,7 +133,7 @@ func (l *LinkedList) Append(val interface{}) {
 
 func (l *LinkedList) Prepend(val interface{}) {
 	newNode := &node{val: val}
-	if l.IsEmpty() {
+	if l.IsEmpty() { // empty list case
 		l.init(newNode)
 		return
 	}
