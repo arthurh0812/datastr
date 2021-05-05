@@ -1,6 +1,10 @@
 package linkedlist
 
-import "sync"
+import (
+	"fmt"
+	"strings"
+	"sync"
+)
 
 type node struct {
 	val interface{}
@@ -141,9 +145,6 @@ func Empty() *LinkedList {
 }
 
 func (l *LinkedList) init(n *node) {
-	if n == nil {
-		return
-	}
 	n.next = nil
 	l.mu.Lock()
 	l.head = n
@@ -177,4 +178,38 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 	initNode.next = nextHead
 	ll.len += nextLen
 	return ll
+}
+
+func (l *LinkedList) collect() []*node {
+	nodes := make([]*node, 0, l.len)
+	for trav := l.head; trav != nil; trav = trav.next {
+		nodes = append(nodes, trav)
+	}
+	return nodes
+}
+
+func (l *LinkedList) values() []interface{} {
+	vals := make([]interface{}, 0, l.len)
+	for trav := l.head; trav != nil; trav = trav.next {
+		vals = append(vals, trav.val)
+	}
+	return vals
+}
+
+func (l *LinkedList) Values() []interface{} {
+	return l.values()
+}
+
+func (l *LinkedList) String() string {
+	b := strings.Builder{}
+	vals := l.values()
+	b.WriteByte('[')
+	for i, val := range vals {
+		if 0 < i {
+			b.WriteString(" ; ")
+		}
+		b.WriteString(fmt.Sprintf(`"%v"`, val))
+	}
+	b.WriteByte(']')
+	return b.String()
 }
