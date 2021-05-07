@@ -49,3 +49,7 @@ func New(val interface{}) *Stack {
 	}
 }
 
+func (s *Stack) String() string {
+	return s.list.String()
+}
+
