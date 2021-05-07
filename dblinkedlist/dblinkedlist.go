@@ -1,6 +1,11 @@
 package dblinkedlist
 
-import "sync"
+import (
+	"fmt"
+	"io"
+	"strings"
+	"sync"
+)
 
 type node struct {
 	val interface{}
@@ -32,8 +37,12 @@ func (l *LinkedList) Len() int64 {
 	return l.len
 }
 
-func (l *LinkedList) IsEmpty() bool {
+func (l *LinkedList) isEmpty() bool {
 	return l == nil || l.head == nil || l.tail == nil || l.len == 0
+}
+
+func (l *LinkedList) IsEmpty() bool {
+	return l.isEmpty()
 }
 
 func (l *LinkedList) append(n *node) {
@@ -124,7 +133,7 @@ func (l *LinkedList) where(val interface{}) *node {
 
 func (l *LinkedList) Append(val interface{}) {
 	newNode := &node{val: val}
-	if l.IsEmpty() { // empty list case is always the same, no matter prepend/append etc.
+	if l.isEmpty() { // empty list case is always the same, no matter prepend/append etc.
 		l.init(newNode)
 		return
 	}
@@ -133,7 +142,7 @@ func (l *LinkedList) Append(val interface{}) {
 
 func (l *LinkedList) Prepend(val interface{}) {
 	newNode := &node{val: val}
-	if l.IsEmpty() { // empty list case
+	if l.isEmpty() { // empty list case
 		l.init(newNode)
 		return
 	}
@@ -165,6 +174,18 @@ func (l *LinkedList) Clear() {
 	l.clear()
 }
 
+func (l *LinkedList) values() []interface{} {
+	vals := make([]interface{}, 0, l.len)
+	for trav := l.head; trav != nil; trav = trav.next {
+		vals = append(vals, trav.val)
+	}
+	return vals
+}
+
+func (l *LinkedList) Values() []interface{} {
+	return l.values()
+}
+
 func New(val interface{}, next *LinkedList) *LinkedList {
 	var nextLen int64
 	var nextHead *node
@@ -178,4 +199,30 @@ func New(val interface{}, next *LinkedList) *LinkedList {
 	initNode = nextHead
 	ll.len += nextLen
 	return ll
+}
+
+func (l *LinkedList) string() string {
+	b := &strings.Builder{}
+	vals := l.values()
+	b.WriteByte('[')
+	writeArray(b, vals, " ; ")
+	b.WriteByte(']')
+	return b.String()
+}
+
+func (l *LinkedList) String() string {
+	return l.string()
+}
+
+func writeArray(w io.Writer, arr []interface{}, sep string) {
+	for i, obj := range arr {
+		if 0 < i {
+			w.Write([]byte(sep))
+		}
+		valString := fmt.Sprintf("%v", obj)
+		if s, ok := obj.(string); ok {
+			valString = fmt.Sprintf("%q", s)
+		}
+		w.Write([]byte(valString))
+	}
 }
