@@ -209,7 +209,7 @@ func (l *LinkedList) string() string {
 	vals := l.values()
 	b := &strings.Builder{}
 	b.WriteByte('[')
-	writeArray(b, vals, " ; ")
+	writeArray(b, vals, ", ")
 	b.WriteByte(']')
 	return b.String()
 }
