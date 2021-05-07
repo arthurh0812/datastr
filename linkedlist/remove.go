@@ -16,7 +16,7 @@ func (l *LinkedList) remove(prev *node) {
 }
 
 func (l *LinkedList) RemoveAt(idx int64) {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return
 	}
 	prev := l.traverse(idx)
@@ -24,7 +24,7 @@ func (l *LinkedList) RemoveAt(idx int64) {
 }
 
 func (l *LinkedList) RemoveWhere(whereVal interface{}) {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return
 	}
 	prevSearched := l.where(whereVal)
@@ -37,7 +37,7 @@ func (l *LinkedList) removeHead() *node {
 	l.mu.Lock()
 	l.head = head.next
 	head.next = nil
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		l.tail = nil
 	}
 	l.len--
@@ -46,7 +46,7 @@ func (l *LinkedList) removeHead() *node {
 }
 
 func (l *LinkedList) RemoveHead() interface{} {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return nil
 	}
 	h := l.removeHead()
@@ -70,7 +70,7 @@ func (l *LinkedList) removeTail() *node {
 }
 
 func (l *LinkedList) RemoveTail() interface{} {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return nil
 	}
 	t := l.removeTail()

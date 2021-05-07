@@ -19,14 +19,14 @@ type LinkedList struct {
 }
 
 func (l *LinkedList) Head() interface{} {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return nil
 	}
 	return l.head.val
 }
 
 func (l *LinkedList) Tail() interface{} {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return nil
 	}
 	return l.tail.val
@@ -36,8 +36,12 @@ func (l *LinkedList) Len() int64 {
 	return l.len
 }
 
-func (l *LinkedList) IsEmpty() bool {
+func (l *LinkedList) isEmpty() bool {
 	return l == nil || l.head == nil || l.tail == nil || l.len == 0
+}
+
+func (l *LinkedList) IsEmpty() bool {
+	return l.isEmpty()
 }
 
 func (l *LinkedList) append(n *node) {
@@ -61,7 +65,7 @@ func (l *LinkedList) prepend(n *node) {
 
 func (l *LinkedList) Append(val interface{}) {
 	newNode := &node{val: val}
-	if l.IsEmpty() { // special case for empty list
+	if l.isEmpty() { // special case for empty list
 		l.init(newNode)
 		return
 	}
@@ -70,7 +74,7 @@ func (l *LinkedList) Append(val interface{}) {
 
 func (l *LinkedList) Prepend(val interface{}) {
 	newNode := &node{val: val}
-	if l.IsEmpty() { // special case for empty list
+	if l.isEmpty() { // special case for empty list
 		l.init(newNode)
 		return
 	}
@@ -122,7 +126,7 @@ func (l *LinkedList) InsertAt(val interface{}, index int64) {
 }
 
 func (l *LinkedList) InsertWhere(val, whereVal interface{}) {
-	if l.IsEmpty() {
+	if l.isEmpty() {
 		return
 	}
 	newNode := &node{val: val, next: nil}
