@@ -8,14 +8,14 @@ type Queue struct {
 	list *linkedlist.LinkedList
 }
 
-func (q *Queue) First() interface{} {
+func (q *Queue) Last() interface{} {
 	if q.isEmpty() {
 		return nil
 	}
 	return q.list.Head()
 }
 
-func (q *Queue) Last() interface{} {
+func (q *Queue) Peek() interface{} {
 	if q.isEmpty() {
 		return nil
 	}
@@ -34,14 +34,14 @@ func (q *Queue) Enqueue(val interface{}) {
 	if q.isEmpty() {
 		return
 	}
-	q.list.Append(val)
+	q.list.Prepend(val)
 }
 
 func (q *Queue) Dequeue() (val interface{}) {
 	if q.isEmpty() {
 		return nil
 	}
-	return q.list.RemoveHead()
+	return q.list.RemoveTail()
 }
 
 func New(val interface{}, append *Queue) *Queue {
