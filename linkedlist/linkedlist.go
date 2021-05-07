@@ -208,7 +208,11 @@ func (l *LinkedList) String() string {
 		if 0 < i {
 			b.WriteString(" ; ")
 		}
-		b.WriteString(fmt.Sprintf(`"%v"`, val))
+		valStr := fmt.Sprintf("%v", val)
+		if s, ok := val.(string); ok {
+			valStr = fmt.Sprintf("%q", s)
+		}
+		b.WriteString(valStr)
 	}
 	b.WriteByte(']')
 	return b.String()
