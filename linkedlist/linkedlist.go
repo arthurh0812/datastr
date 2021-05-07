@@ -2,6 +2,7 @@ package linkedlist
 
 import (
 	"fmt"
+	"io"
 	"strings"
 	"sync"
 )
@@ -204,20 +205,28 @@ func (l *LinkedList) Values() []interface{} {
 	return l.values()
 }
 
-func (l *LinkedList) String() string {
-	b := strings.Builder{}
+func (l *LinkedList) string() string {
 	vals := l.values()
+	b := &strings.Builder{}
 	b.WriteByte('[')
-	for i, val := range vals {
-		if 0 < i {
-			b.WriteString(" ; ")
-		}
-		valStr := fmt.Sprintf("%v", val)
-		if s, ok := val.(string); ok {
-			valStr = fmt.Sprintf("%q", s)
-		}
-		b.WriteString(valStr)
-	}
+	writeArray(b, vals, " ; ")
 	b.WriteByte(']')
 	return b.String()
+}
+
+func (l *LinkedList) String() string {
+	return l.string()
+}
+
+func writeArray(w io.Writer, arr []interface{}, sep string) {
+	for i, obj := range arr {
+		if 0 < i {
+			w.Write([]byte(sep))
+		}
+		objString := fmt.Sprintf("%v", obj)
+		if s, ok := obj.(string); ok {
+			objString = fmt.Sprintf("%q", s)
+		}
+		w.Write([]byte(objString))
+	}
 }
