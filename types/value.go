@@ -7,6 +7,68 @@ type Value interface {
 	IsLessThan(v Value) bool
 }
 
+func GetValue(val interface{}) Value {
+	switch val.(type) {
+	case int:
+	case int8:
+	case int16:
+	case int32:
+	case int64:
+		return GetInt(val)
+	case uint:
+	case uint8:
+	case uint16:
+	case uint32:
+	case uint64:
+		return GetUint(val)
+	case string:
+	case []byte:
+		return GetString(val)
+	}
+	return nil
+}
+
+func GetString(s interface{}) String {
+	switch s.(type) {
+	case string:
+	case []byte:
+		return String(s.(string))
+	}
+	return String("")
+}
+
+func GetInt(n interface{}) Int {
+	switch n.(type) {
+	case int:
+		return Int(n.(int))
+	case int8:
+		return Int(n.(int8))
+	case int16:
+		return Int(n.(int16))
+	case int32:
+		return Int(n.(int32))
+	case int64:
+		return Int(n.(int64))
+	}
+	return Int(0)
+}
+
+func GetUint(n interface{}) Uint {
+	switch n.(type) {
+	case uint:
+		return Uint(n.(uint))
+	case uint8:
+		return Uint(n.(uint8))
+	case uint16:
+		return Uint(n.(uint16))
+	case uint32:
+		return Uint(n.(uint32))
+	case uint64:
+		return Uint(n.(uint64))
+	}
+	return Uint(0)
+}
+
 // STRING
 
 type String string
