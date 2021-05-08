@@ -104,7 +104,7 @@ func (l *LinkedList) traverseDown(n int64) *node {
 		if trav == nil {
 			return nil
 		}
-		trav = trav.next
+		trav = trav.prev
 	}
 	return trav
 }
