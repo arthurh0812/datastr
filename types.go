@@ -5,7 +5,7 @@ import (
 )
 
 func NewString(s string) types.String {
-	return types.String(s)
+	return types.GetString(s)
 }
 
 func NewStringSlice(s []string) []types.String {
@@ -17,19 +17,7 @@ func NewStringSlice(s []string) []types.String {
 }
 
 func NewInt(n interface{}) types.Int {
-	switch n.(type) {
-	case int:
-		return types.Int(n.(int))
-	case int8:
-		return types.Int(n.(int8))
-	case int16:
-		return types.Int(n.(int16))
-	case int32:
-		return types.Int(n.(int32))
-	case int64:
-		return types.Int(n.(int64))
-	}
-	return types.Int(0)
+	return types.GetInt(n)
 }
 
 func NewIntSlice(s []interface{}) []types.Int {
@@ -41,19 +29,7 @@ func NewIntSlice(s []interface{}) []types.Int {
 }
 
 func NewUint(n interface{}) types.Uint {
-	switch n.(type) {
-	case uint:
-		return types.Uint(n.(uint))
-	case uint8:
-		return types.Uint(n.(uint8))
-	case uint16:
-		return types.Uint(n.(uint16))
-	case uint32:
-		return types.Uint(n.(uint32))
-	case uint64:
-		return types.Uint(n.(uint64))
-	}
-	return types.Uint(0)
+	return types.GetUint(n)
 }
 
 func NewUintSlice(s []interface{}) []types.Uint {
