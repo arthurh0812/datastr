@@ -8,6 +8,10 @@ type Queue struct {
 	list *linkedlist.LinkedList
 }
 
+func (q *Queue) isEmpty() bool {
+	return q == nil || q.list.IsEmpty()
+}
+
 func (q *Queue) Last() interface{} {
 	if q.isEmpty() {
 		return nil
@@ -20,10 +24,6 @@ func (q *Queue) Peek() interface{} {
 		return nil
 	}
 	return q.list.Tail()
-}
-
-func (q *Queue) isEmpty() bool {
-	return q == nil || q.list.IsEmpty()
 }
 
 func (q *Queue) IsEmpty() bool {
@@ -42,16 +42,6 @@ func (q *Queue) Dequeue() (val interface{}) {
 		return nil
 	}
 	return q.list.RemoveTail()
-}
-
-func New(val interface{}, append *Queue) *Queue {
-	toAppend := linkedlist.Empty()
-	if !append.isEmpty() {
-		toAppend = append.list
-	}
-	return &Queue{
-		list: linkedlist.New(val, toAppend),
-	}
 }
 
 func (q *Queue) String() string {
