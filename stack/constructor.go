@@ -1,6 +1,6 @@
 package stack
 
-import "github.com/arthurh0812/datastr/linkedlist"
+import "github.com/arthurh0812/datastruct/linkedlist"
 
 // Empty creates a new empty Stack that satisfies Stack.IsEmpty.
 func Empty() *Stack {

@@ -1,7 +1,7 @@
-package datastr
+package datastruct
 
 import (
-	"github.com/arthurh0812/datastr/types"
+	"github.com/arthurh0812/datastruct/types"
 )
 
 func NewString(s string) types.String {

@@ -1,6 +1,6 @@
 package binaryheap
 
-import "github.com/arthurh0812/datastr/types"
+import "github.com/arthurh0812/datastruct/types"
 
 func (h *Heap) removeLast() {
 	h.mu.Lock()

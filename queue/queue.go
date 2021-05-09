@@ -1,7 +1,7 @@
 package queue
 
 import (
-	"github.com/arthurh0812/datastr/linkedlist"
+	"github.com/arthurh0812/datastruct/linkedlist"
 )
 
 type Queue struct {

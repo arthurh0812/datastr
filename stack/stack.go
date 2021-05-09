@@ -1,6 +1,6 @@
 package stack
 
-import "github.com/arthurh0812/datastr/linkedlist"
+import "github.com/arthurh0812/datastruct/linkedlist"
 
 type Stack struct {
 	list *linkedlist.LinkedList
