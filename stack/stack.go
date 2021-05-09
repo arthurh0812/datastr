@@ -43,26 +43,9 @@ func (s *Stack) Pop() (val interface{}) {
 	return s.list.RemoveHead()
 }
 
-func Empty() *Stack {
-	return &Stack{
-		list: linkedlist.Empty(),
-	}
-}
-
-func New(val interface{}, append *Stack) *Stack {
-	toAppend := linkedlist.Empty()
-	if !append.isEmpty() {
-		toAppend = append.list
-	}
-	return &Stack{
-		list: linkedlist.New(val, toAppend),
-	}
-}
-
 func (s *Stack) String() string {
 	if s.isEmpty() {
 		return "[]"
 	}
 	return s.list.String()
 }
-
