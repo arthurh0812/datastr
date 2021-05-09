@@ -4,6 +4,7 @@ import "github.com/arthurh0812/datastr/types"
 
 type Heap struct {
 	arr []types.Value
+	table map[types.Value][]int
 	max bool // default=min
 }
 
@@ -25,8 +26,48 @@ func (h *Heap) getParent(child int) (parent int) {
 	return (child-1)/2
 }
 
-func (h *Heap) swap(i, j int) {
-	h.arr[i], h.arr[j] = h.arr[j], h.arr[i]
+func (h *Heap) swap(f, s int) {
+	first, sec := h.arr[f], h.arr[s]
+	h.replaceTable(first, f, s) // change index in table
+	h.replaceTable(sec, s, f) // change index in table
+	h.arr[f], h.arr[s] = sec, first
+}
+
+func (h *Heap) appendArray(val types.Value) {
+	h.arr = append(h.arr, val)
+}
+
+func (h *Heap) appendTable(key types.Value, idx int) {
+	h.table[key] = append(h.table[key], idx)
+}
+
+func (h *Heap) getIndex(val types.Value) (idx int) {
+	indices := h.table[val]
+	if len(indices) == 0 {
+		return -1
+	}
+	return indices[0] // retrieve first of the indices
+}
+
+func (h *Heap) replaceTable(key types.Value, toReplace, replaceWith int) {
+	indices := h.table[key]
+	for j, el := range indices {
+		if el == toReplace { // linear search is enough because indices are unique
+			indices[j] = replaceWith
+			return
+		}
+	}
+}
+
+func (h *Heap) decideBubble(idx int) (down bool) {
+	val := h.arr[idx]
+	p := h.getParent(idx)
+	if h.max && val.IsGreaterThan(h.arr[p]) {
+		down = false
+	} else if !h.max && val.IsLessThan(h.arr[p]) {
+		down = false
+	}
+	return true
 }
 
 func (h *Heap) bubbleUpMin(child int) (parent int) {
@@ -102,14 +143,15 @@ func (h *Heap) bubbleDown() {
 }
 
 func (h *Heap) Insert(val types.Value) {
-	// append the new value to the
-	h.arr = append(h.arr, val)
+	h.appendArray(val) // append the value to the end of the array
+	h.appendTable(val, len(h.arr)-1) // add the new last index to the table for key 'val'
 	h.bubbleUp() // reorganize heap (upwards)
 }
 
 func (h *Heap) poll() (first types.Value) {
-	first, last := h.arr[0], h.arr[len(h.arr)-1]
-	h.arr[0] = last
+	first = h.arr[0]
+	h.swap(0, len(h.arr)-1) // swap the first and last element
+	h.removeLast() // remove the last value (which was the previous first because of the swap)
 	return first
 }
 
