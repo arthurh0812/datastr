@@ -8,6 +8,14 @@ type Heap struct {
 	max bool // default=min
 }
 
+func (h *Heap) getAll() []types.Value {
+	return h.arr
+}
+
+func (h *Heap) setMax(t bool) {
+	h.max = t
+}
+
 func (h *Heap) isEmpty() bool {
 	return h == nil || len(h.arr) == 0
 }
@@ -148,6 +156,12 @@ func (h *Heap) Insert(val types.Value) {
 	h.bubbleUp() // reorganize heap (upwards)
 }
 
+func (h *Heap) InsertAll(vals []types.Value) {
+	for _, val := range vals {
+		h.Insert(val)
+	}
+}
+
 func (h *Heap) poll() (first types.Value) {
 	first = h.arr[0]
 	h.swap(0, len(h.arr)-1) // swap the first and last element
@@ -173,10 +187,32 @@ func (h *Heap) Peek() (val types.Value) {
 
 // MakeMin makes this heap a minimum priority queue; this is the default.
 func (h *Heap) MakeMin() {
-	h.max = false
+	if !h.max { // if it already is a minimum heap
+		return
+	}
+	all := h.getAll()
+	h.clear()
+	h.setMax(false)
+	h.InsertAll(all)
 }
 
 // MakeMax makes this heap a maximum priority queue.
 func (h *Heap) MakeMax() {
-	h.max = true
+	if h.max { // if it already is a maximum heap
+		return
+	}
+	all := h.getAll()
+	h.clear()
+	h.setMax(true)
+	h.InsertAll(all)
+}
+
+func (h *Heap) clear() {
+	h.arr = make([]types.Value, 0, 0)
+	h.max = false
+	h.table = make(map[types.Value][]int)
+}
+
+func (h *Heap) Clear() {
+	h.clear()
 }
