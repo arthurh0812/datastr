@@ -25,15 +25,16 @@ func (h *Heap) Remove(val types.Value) {
 	if idx == -1 {
 		return
 	}
-	h.remove(idx) // removal at heap index
-	h.removeFromTable(val, idx) // remove the index from the table
+	h.remove(idx) // removal of value at at heap index
+	h.removeFromTable(val, idx) // removal of index from the table
 }
 
 func (h *Heap) RemoveAt(idx int) (val types.Value) {
 	if h.isEmpty() || h.isOutOfBounds(idx) {
 		return nil
 	}
-	val = h.getValue(idx)
-	h.remove(idx)
+	val = h.getValue(idx) // heap lookup
+	h.remove(idx) // removal of value at heap index
+	h.removeFromTable(val, idx) // removal of index from the table
 	return val
 }
