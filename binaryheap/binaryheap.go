@@ -113,16 +113,34 @@ func (h *Heap) getValue(idx int) (val types.Value) {
 	return h.arr[idx]
 }
 
-func (h *Heap) replaceTable(key types.Value, toReplace, replaceWith int) {
-	indices := h.table[key]
-	for j, el := range indices {
-		if el == toReplace { // linear search is enough because indices are unique
-			h.mu.Lock()
-			indices[j] = replaceWith
-			h.mu.Unlock()
-			return
+func (h *Heap) searchTable(key types.Value, idx int) (tableIdx int) {
+	for tableIdx, heapIdx := range h.table[key] {
+		if heapIdx == idx {
+			return tableIdx
 		}
 	}
+	return -1
+}
+
+func (h *Heap) replaceTable(key types.Value, toReplace, replaceWith int) {
+	tableIdx := h.searchTable(key, toReplace)
+	if tableIdx < 0 {
+		return
+	}
+	h.mu.Lock()
+	h.table[key][tableIdx] = replaceWith
+	h.mu.Unlock()
+}
+
+func (h *Heap) removeFromTable(key types.Value, idx int) {
+	tableIdx := h.searchTable(key, idx)
+	if tableIdx < 0 {
+		return
+	}
+	indices := h.table[key]
+	h.mu.Lock()
+	h.table[key] = append(indices[:tableIdx], indices[tableIdx+1:]...) // remove the index of the array of the table
+	h.mu.Unlock()
 }
 
 func (h *Heap) decideBubble(idx int) (down bool) {
