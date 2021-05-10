@@ -56,5 +56,6 @@ type Tree interface {
 
 // UnionFind Abstract Data Type
 type UnionFind interface {
-
+	Unify()
+	Find(node int64) (root int64)
 }
