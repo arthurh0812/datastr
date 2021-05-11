@@ -56,6 +56,7 @@ type Tree interface {
 
 // UnionFind Abstract Data Type
 type UnionFind interface {
-	Unify()
-	Find(node int64) (root int64)
+	ADT // implements Abstract Data Type
+	Unify(first, second int)
+	Find(node int) (root int)
 }
