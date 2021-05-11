@@ -59,6 +59,10 @@ func (h *Heap) isEmpty() bool {
 	return h == nil || h.size == 0
 }
 
+func (h *Heap) IsEmpty() bool {
+	return h.isEmpty()
+}
+
 func (h *Heap) isOutOfBounds(idx int) bool {
 	return idx < 0 || h.size-1 < idx
 }
