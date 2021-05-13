@@ -7,11 +7,11 @@ func (t *Tree) remove(n *node) {
 	if parent == nil || child == nil { // root or not found
 		return
 	}
-	t.chooseRemove(parent, child)
+	chooseRemove(parent, child)
 	t.decreaseSize()
 }
 
-func (t *Tree) chooseRemove(parent, child *node) {
+func chooseRemove(parent, child *node) {
 	if child.isLeaf() {
 		parent.removeChild(child)
 		return

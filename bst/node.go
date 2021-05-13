@@ -118,7 +118,7 @@ func (n *node) removeLeftAndFill() {
 	child := n.left
 	p, largest := child.left.findLargest()
 	child.swap(largest)
-	p.removeRight() // largest is always the right child of p
+	chooseRemove(p, largest) // largest is always the right child of p
 }
 
 // the right child of n must have a left subtree
@@ -126,7 +126,7 @@ func (n *node) removeRightAndFill() {
 	child := n.right
 	p, largest := child.left.findLargest()
 	child.swap(largest)
-	p.removeRight()
+	chooseRemove(p, largest)
 }
 
 // traverses always through subsequent right children of n (to find the largest subsequent node)
