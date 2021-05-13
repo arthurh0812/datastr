@@ -2,48 +2,38 @@ package bst
 
 import "github.com/arthurh0812/datastruct/types"
 
-func (t *Tree) removeLeaf(prev, toRemove *node) {
-	if toRemove == prev.left {
-		prev.left = nil
-	} else if toRemove == prev.right {
-		prev.right = nil
-	}
-}
-
-func (t *Tree) removeAndAddLeftSubtree(prev, toRemove *node) {
-	if toRemove == prev.left {
-		prev.left = toRemove.left
-	} else if toRemove == prev.right {
-		prev.right = toRemove.left
-	}
-	toRemove.left = nil
-	toRemove.right = nil
-}
-
-func (t *Tree) removeAndAddRightSubtree(prev, toRemove *node) {
-	if toRemove == prev.left {
-		prev.left = toRemove.right
-	} else if toRemove == prev.right {
-		prev.right = toRemove.right
-	}
-	toRemove.left = nil
-	toRemove.right = nil
-}
-
-func (t *Tree) remove(val types.Value) {
-	prev, n := t.findPre(val)
-	if prev == nil { // root
+func (t *Tree) remove(n *node) {
+	parent, child := t.findPre(n)
+	if parent == nil || child == nil { // root or not found
 		return
 	}
-	if n.isLeaf() {
-		t.removeLeaf(prev, n)
+	t.chooseRemove(parent, child)
+	t.decreaseSize()
+}
+
+func (t *Tree) chooseRemove(parent, child *node) {
+	if child.isLeaf() {
+		parent.removeChild(child)
 		return
 	}
-	if n.hasOnlyLeft() {
-		t.removeAndAddLeftSubtree(prev, n)
+	if child.hasOnlyLeft() {
+		parent.removeChildAndJoinLeft(child)
+		return
 	}
-	if n.hasOnlyRight() {
-		t.removeAndAddRightSubtree(prev, n)
+	if child.hasOnlyRight() {
+		parent.removeChildAndJoinRight(child)
+		return
 	}
-	// case where there is both a left and a right subtree
+	// the child has both a left and a right subtree
+	if parent.isLeft(child) {
+		parent.removeLeftAndFill()
+	} else if parent.isRight(child) {
+		parent.removeRightAndFill()
+	}
+}
+
+// Remove tries to find a node that holds val and removes it from the tree.
+func (t *Tree) Remove(val types.Value) {
+	n := &node{val: val}
+	t.remove(n)
 }
