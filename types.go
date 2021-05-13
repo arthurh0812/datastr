@@ -11,7 +11,7 @@ func NewString(s string) types.String {
 func NewStringSlice(s []string) []types.String {
 	res := make([]types.String, 0, len(s))
 	for _, e := range s {
-		res = append(res, NewString(e))
+		res = append(res, types.GetString(e))
 	}
 	return res
 }
@@ -23,7 +23,7 @@ func NewInt(n interface{}) types.Int {
 func NewIntSlice(s []interface{}) []types.Int {
 	res := make([]types.Int, 0, len(s))
 	for _, e := range s {
-		res = append(res,NewInt(e))
+		res = append(res, types.GetInt(e))
 	}
 	return res
 }
@@ -35,7 +35,19 @@ func NewUint(n interface{}) types.Uint {
 func NewUintSlice(s []interface{}) []types.Uint {
 	res := make([]types.Uint, 0, len(s))
 	for _, e := range s {
-		res = append(res, NewUint(e))
+		res = append(res, types.GetUint(e))
+	}
+	return res
+}
+
+func NewFloat(f interface{}) types.Float {
+	return types.GetFloat(f)
+}
+
+func NewFloatSlice(s []interface{}) []types.Float {
+	res := make([]types.Float, 0, len(s))
+	for _, e := range s {
+		res = append(res, types.GetFloat(e))
 	}
 	return res
 }

@@ -69,6 +69,16 @@ func GetUint(n interface{}) Uint {
 	return Uint(0)
 }
 
+func GetFloat(f interface{}) Float {
+	switch f.(type) {
+	case float32:
+		return Float(f.(float32))
+	case float64:
+		return Float(f.(float64))
+	}
+	return Float(0)
+}
+
 // STRING
 
 type String string
@@ -140,6 +150,31 @@ func (u Uint) IsGreaterThan(v Value) bool {
 func (u Uint) IsLessThan(v Value) bool {
 	if vu, ok := v.(Uint); ok {
 		return u < vu
+	}
+	return false
+}
+
+// FLOAT
+
+type Float float64
+
+func (f Float) IsEqualTo(v Value) bool {
+	if vf, ok := v.(Float); ok {
+		return f == vf
+	}
+	return false
+}
+
+func (f Float) IsGreaterThan(v Value) bool {
+	if vf, ok := v.(Float); ok {
+		return vf < f
+	}
+	return false
+}
+
+func (f Float) IsLessThan(v Value) bool {
+	if vf, ok := v.(Float); ok {
+		return f < vf
 	}
 	return false
 }
