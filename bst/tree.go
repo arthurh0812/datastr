@@ -21,7 +21,7 @@ func (t *Tree) Size() int64 {
 func (t *Tree) setSize(s int64) {
 	t.mu.Lock()
 	t.size = s
-	t.mu.Lock()
+	t.mu.Unlock()
 }
 
 func (t *Tree) increaseSize() {
@@ -90,6 +90,12 @@ func (t *Tree) find(n *node) *node {
 	return nil
 }
 
+func (t *Tree) Exists(val types.Value) bool {
+	n := &node{val: val}
+	found := t.find(n)
+	return found != nil
+}
+
 // O(log(n)) average time complexity
 func (t *Tree) findPre(n *node) (prev, found *node) {
 	trav, prev := t.root, nil
@@ -108,8 +114,9 @@ func (t *Tree) insert(n *node) {
 	for curr != nil {
 		prev := curr
 		curr = t.chooseNext(curr, n)
-		if curr == nil {
+		if curr == nil { // last one found, insert after previous
 			prev.insert(n)
+			t.increaseSize()
 			break
 		}
 	}

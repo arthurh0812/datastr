@@ -116,7 +116,7 @@ func (n *node) removeChildAndJoinRight(child *node) {
 // the left child of n must have a left subtree
 func (n *node) removeLeftAndFill() {
 	child := n.left
-	p, largest := child.left.findLargest()
+	p, largest := child.findLargestLeft()
 	child.swap(largest)
 	chooseRemove(p, largest) // largest is always the right child of p
 }
@@ -124,14 +124,15 @@ func (n *node) removeLeftAndFill() {
 // the right child of n must have a left subtree
 func (n *node) removeRightAndFill() {
 	child := n.right
-	p, largest := child.left.findLargest()
+	p, largest := child.findLargestRight()
 	child.swap(largest)
 	chooseRemove(p, largest)
 }
 
-// traverses always through subsequent right children of n (to find the largest subsequent node)
-func (n *node) findLargest() (parent, largest *node) {
-	trav := n
+// traverses always through subsequent right children of the left subtree of n
+func (n *node) findLargestLeft() (parent, largest *node) {
+	parent = n
+	trav := n.left
 	for trav != nil {
 		if trav.right == nil {
 			return parent, trav
@@ -142,9 +143,10 @@ func (n *node) findLargest() (parent, largest *node) {
 	return nil, nil
 }
 
-// traverses always through subsequent left children of n (to find the smallest subsequent node)
-func (n *node) findSmallest() (parent, smallest *node) {
-	trav := n
+// traverses always through subsequent right children of the right subtree of n
+func (n *node) findLargestRight() (parent, largest *node) {
+	parent = n
+	trav := n.right
 	for trav != nil {
 		if trav.left == nil {
 			return parent, trav
