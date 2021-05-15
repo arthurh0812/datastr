@@ -6,63 +6,58 @@ import (
 )
 
 func (t *Tree) PreOrder(cb func(node *Node)) {
-	trav := t.root
-	nodeStack := stack.Empty()
-	for trav != nil {
-		nodeStack.Push(trav)
-		cb(trav)
-		trav = trav.left
-	}
+	nodeStack := stack.New(t.root, stack.Empty())
 	for !nodeStack.IsEmpty() {
 		last := nodeStack.Pop().(*Node)
-		trav = last.right
-		for trav != nil {
-			nodeStack.Push(trav)
-			cb(trav)
-			trav = trav.left
+		cb(last)
+		if last.right != nil {
+			nodeStack.Push(last.right)
+		}
+		if last.left != nil {
+			nodeStack.Push(last.left)
 		}
 	}
 }
 
+// InOrder traverses through the binary tree in sorting order.
 func (t *Tree) InOrder(cb func(node *Node)) {
 	trav := t.root
 	nodeStack := stack.Empty()
-	for trav != nil {
-		nodeStack.Push(trav)
-		trav = trav.left
-	}
-	for !nodeStack.IsEmpty() {
-		last := nodeStack.Pop().(*Node)
-		cb(last) // call the callback on the node
-		trav = last.right
-		for trav != nil {
+	for trav != nil || !nodeStack.IsEmpty() { // traverse right-wards
+		if trav != nil { // traverse leftwards
 			nodeStack.Push(trav)
 			trav = trav.left
+			continue
+		}
+		last := nodeStack.Pop().(*Node)
+		cb(last)
+		trav = last.right
+	}
+}
+
+// PostOrder is a more complex traversal.
+func (t *Tree) PostOrder(cb func(node *Node)) {
+	trav, prev := t.root, (*Node)(nil)
+	nodeStack := stack.Empty()
+	for trav != nil || !nodeStack.IsEmpty() { // traverse right-wards
+		if trav != nil { // traverse leftwards
+			nodeStack.Push(trav)
+			trav = trav.left
+			continue
+		}
+		last := nodeStack.Last().(*Node)
+		if last.right == nil || last.right == prev {
+			nodeStack.Pop()
+			cb(last)
+			prev, trav = last, nil
+		} else {
+			trav = last.right
 		}
 	}
 }
 
-func (t *Tree) PostOrder(cb func(node *Node)) {
-	//trav := t.root
-	//nodeStack := stack.Empty()
-	//for trav != nil {
-	//	nodeStack.Push(trav)
-	//	trav = trav.left
-	//}
-	//for !nodeStack.IsEmpty() {
-	//	last := nodeStack.Pop().(*Node)
-	//	cb(last)
-	//	trav = last.right
-	//	for trav != nil {
-	//		nodeStack.Push(trav)
-	//		trav = trav.left
-	//	}
-	//}
-}
-
 func (t *Tree) LevelOrder(cb func(node *Node)) {
-	trav := t.root
-	nodeQueue := queue.New(trav, queue.Empty())
+	nodeQueue := queue.New(t.root, queue.Empty())
 	for !nodeQueue.IsEmpty() {
 		parent := nodeQueue.Dequeue().(*Node)
 		cb(parent)
