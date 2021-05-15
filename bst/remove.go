@@ -2,8 +2,8 @@ package bst
 
 import "github.com/arthurh0812/datastruct/types"
 
-func (t *Tree) remove(n *node) {
-	parent, child := t.findPre(n)
+func (t *Tree) remove(n *Node) {
+	parent, child := t.findPrev(n)
 	if parent == nil || child == nil { // root or not found
 		return
 	}
@@ -11,7 +11,7 @@ func (t *Tree) remove(n *node) {
 	t.decreaseSize()
 }
 
-func chooseRemove(parent, child *node) {
+func chooseRemove(parent, child *Node) {
 	if child.isLeaf() {
 		parent.removeChild(child)
 		return
@@ -32,8 +32,8 @@ func chooseRemove(parent, child *node) {
 	}
 }
 
-// Remove tries to find a node that holds val and removes it from the tree.
+// Remove tries to find a Node that holds val and removes it from the tree.
 func (t *Tree) Remove(val types.Value) {
-	n := &node{val: val}
+	n := &Node{val: val}
 	t.remove(n)
 }

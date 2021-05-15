@@ -6,7 +6,7 @@ import (
 )
 
 type Tree struct {
-	root *node
+	root *Node
 	size int64
 
 	duplicates bool
@@ -44,7 +44,7 @@ func (t *Tree) IsEmpty() bool {
 	return t.isEmpty()
 }
 
-func (t *Tree) setRoot(n *node) {
+func (t *Tree) setRoot(n *Node) {
 	t.mu.Lock()
 	t.root = n
 	t.mu.Unlock()
@@ -66,7 +66,7 @@ func (t *Tree) allowsDuplicates() bool {
 	return t.duplicates
 }
 
-func (t *Tree) traverse(n *node) (pre *node) {
+func (t *Tree) traverse(n *Node) (pre *Node) {
 	trav := t.root
 	for trav != nil {
 		pre := trav
@@ -79,7 +79,7 @@ func (t *Tree) traverse(n *node) (pre *node) {
 }
 
 // O(log(n)) average time complexity
-func (t *Tree) find(n *node) *node {
+func (t *Tree) find(n *Node) *Node {
 	trav := t.root
 	for trav != nil {
 		if trav.isEqualTo(n) {
@@ -90,14 +90,14 @@ func (t *Tree) find(n *node) *node {
 	return nil
 }
 
-func (t *Tree) Exists(val types.Value) bool {
-	n := &node{val: val}
+func (t *Tree) Contains(val types.Value) bool {
+	n := &Node{val: val}
 	found := t.find(n)
 	return found != nil
 }
 
 // O(log(n)) average time complexity
-func (t *Tree) findPre(n *node) (prev, found *node) {
+func (t *Tree) findPrev(n *Node) (prev, found *Node) {
 	trav, prev := t.root, nil
 	for trav != nil {
 		if trav.isEqualTo(n) {
@@ -109,7 +109,7 @@ func (t *Tree) findPre(n *node) (prev, found *node) {
 	return nil, nil
 }
 
-func (t *Tree) insert(n *node) {
+func (t *Tree) insert(n *Node) {
 	curr := t.root
 	for curr != nil {
 		prev := curr
@@ -122,7 +122,7 @@ func (t *Tree) insert(n *node) {
 	}
 }
 
-func (t *Tree) chooseNext(curr, toCompare *node) *node {
+func (t *Tree) chooseNext(curr, toCompare *Node) *Node {
 	if t.allowsDuplicates() && curr.isEqualTo(toCompare) || curr.isGreaterThan(toCompare) {
 		return curr.left
 	} else if curr.isLessThan(toCompare) {
@@ -132,7 +132,7 @@ func (t *Tree) chooseNext(curr, toCompare *node) *node {
 }
 
 func (t *Tree) Insert(val types.Value) {
-	n := &node{val: val}
+	n := &Node{val: val}
 	if t.isEmpty() {
 		t.init(n)
 		return
@@ -140,7 +140,7 @@ func (t *Tree) Insert(val types.Value) {
 	t.insert(n)
 }
 
-func (t *Tree) init(n *node) {
+func (t *Tree) init(n *Node) {
 	t.setRoot(n)
 	t.setSize(1)
 }

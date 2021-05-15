@@ -4,51 +4,51 @@ import (
 	"github.com/arthurh0812/datastruct/types"
 )
 
-type node struct {
+type Node struct {
 	val types.Value
-	left, right *node
+	left, right *Node
 }
 
-func (n *node) isLeaf() bool {
+func (n *Node) isLeaf() bool {
 	return n != nil && n.left == nil && n.right == nil
 }
 
-func (n *node) hasOnlyLeft() bool {
+func (n *Node) hasOnlyLeft() bool {
 	return n != nil && n.left != nil && n.right == nil
 }
 
-func (n *node) hasOnlyRight() bool {
+func (n *Node) hasOnlyRight() bool {
 	return n != nil && n.right != nil && n.left == nil
 }
 
-func (n *node) hasChildren() bool {
+func (n *Node) hasChildren() bool {
 	return n != nil && (n.right != nil || n.left != nil)
 }
 
 // n and other mustn't be nil
-func (n *node) isEqualTo(other *node) bool {
+func (n *Node) isEqualTo(other *Node) bool {
 	return n.val.IsEqualTo(other.val)
 }
 
 // n and other mustn't be nil
-func (n *node) isGreaterThan(other *node) bool {
+func (n *Node) isGreaterThan(other *Node) bool {
 	return n.val.IsGreaterThan(other.val)
 }
 
 // n and other mustn't be nil
-func (n *node) isLessThan(other *node) bool {
+func (n *Node) isLessThan(other *Node) bool {
 	return n.val.IsLessThan(other.val)
 }
 
-func (n *node) isLeft(other *node) bool {
+func (n *Node) isLeft(other *Node) bool {
 	return n.left == other
 }
 
-func (n *node) isRight(other *node) bool {
+func (n *Node) isRight(other *Node) bool {
 	return n.right == other
 }
 
-func (n *node) insert(toInsert *node) {
+func (n *Node) insert(toInsert *Node) {
 	if n == nil {
 		return
 	}
@@ -59,20 +59,20 @@ func (n *node) insert(toInsert *node) {
 	}
 }
 
-func (n *node) insertLeft(toInsert *node) {
+func (n *Node) insertLeft(toInsert *Node) {
 	n.left = toInsert
 }
 
-func (n *node) insertRight(toInsert *node) {
+func (n *Node) insertRight(toInsert *Node) {
 	n.right = toInsert
 }
 
-// swaps the values of the two nodes
-func (n *node) swap(other *node) {
+// swaps the values of the two Nodes
+func (n *Node) swap(other *Node) {
 	n.val, other.val = other.val, n.val
 }
 
-func (n *node) removeChild(child *node) {
+func (n *Node) removeChild(child *Node) {
 	if n.left == child {
 		n.left = nil
 	} else if n.right == child {
@@ -80,20 +80,20 @@ func (n *node) removeChild(child *node) {
 	}
 }
 
-func (n *node) removeLeft() {
+func (n *Node) removeLeft() {
 	n.left = nil
 }
 
-func (n *node) removeRight() {
+func (n *Node) removeRight() {
 	n.right = nil
 }
 
-func (n *node) removeChildren() {
+func (n *Node) removeChildren() {
 	n.left = nil
 	n.right = nil
 }
 
-func (n *node) removeChildAndJoinLeft(child *node) {
+func (n *Node) removeChildAndJoinLeft(child *Node) {
 	if n.isLeft(child) {
 		n.left = child.left
 		child.removeLeft()
@@ -103,7 +103,7 @@ func (n *node) removeChildAndJoinLeft(child *node) {
 	}
 }
 
-func (n *node) removeChildAndJoinRight(child *node) {
+func (n *Node) removeChildAndJoinRight(child *Node) {
 	if n.isLeft(child) {
 		n.left = child.right
 		child.removeRight()
@@ -114,7 +114,7 @@ func (n *node) removeChildAndJoinRight(child *node) {
 }
 
 // the left child of n must have a left subtree
-func (n *node) removeLeftAndFill() {
+func (n *Node) removeLeftAndFill() {
 	child := n.left
 	p, largest := child.findLargestLeft()
 	child.swap(largest)
@@ -122,7 +122,7 @@ func (n *node) removeLeftAndFill() {
 }
 
 // the right child of n must have a left subtree
-func (n *node) removeRightAndFill() {
+func (n *Node) removeRightAndFill() {
 	child := n.right
 	p, largest := child.findLargestRight()
 	child.swap(largest)
@@ -130,7 +130,7 @@ func (n *node) removeRightAndFill() {
 }
 
 // traverses always through subsequent right children of the left subtree of n
-func (n *node) findLargestLeft() (parent, largest *node) {
+func (n *Node) findLargestLeft() (parent, largest *Node) {
 	parent = n
 	trav := n.left
 	for trav != nil {
@@ -144,7 +144,7 @@ func (n *node) findLargestLeft() (parent, largest *node) {
 }
 
 // traverses always through subsequent right children of the right subtree of n
-func (n *node) findLargestRight() (parent, largest *node) {
+func (n *Node) findLargestRight() (parent, largest *Node) {
 	parent = n
 	trav := n.right
 	for trav != nil {
