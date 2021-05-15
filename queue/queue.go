@@ -31,9 +31,6 @@ func (q *Queue) IsEmpty() bool {
 }
 
 func (q *Queue) Enqueue(val interface{}) {
-	if q.isEmpty() {
-		return
-	}
 	q.list.Prepend(val)
 }
 
