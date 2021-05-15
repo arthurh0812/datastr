@@ -29,9 +29,6 @@ func (s *Stack) IsEmpty() bool {
 }
 
 func (s *Stack) Push(val interface{}) {
-	if s.isEmpty() {
-		return
-	}
 	s.list.Prepend(val)
 }
 
