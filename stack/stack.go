@@ -49,3 +49,10 @@ func (s *Stack) String() string {
 	}
 	return s.list.String()
 }
+
+func (s *Stack) Clear() {
+	if s.isEmpty() {
+		return
+	}
+	s.list.Clear()
+}

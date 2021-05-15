@@ -50,3 +50,10 @@ func (q *Queue) String() string {
 	}
 	return q.list.String()
 }
+
+func (q *Queue) Clear() {
+	if q.isEmpty() {
+		return
+	}
+	q.list.Clear()
+}
