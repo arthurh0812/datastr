@@ -50,8 +50,24 @@ type PriorityQueue interface {
 
 // Tree Abstract Data Type
 type Tree interface {
+	ADT
 	Root() types.Value
 	Size() int64
+}
+
+// BinarySearchTree Abstract Data Type
+type BinarySearchTree interface {
+	Tree
+	Insert(val types.Value)
+	Remove(val types.Value)
+	Contains(val types.Value) bool
+}
+
+// HashTable Abstract Data Type
+type HashTable interface {
+	ADT
+	Insert(key types.Value, val interface{})
+	Get(key types.Value) interface{}
 }
 
 // UnionFind Abstract Data Type

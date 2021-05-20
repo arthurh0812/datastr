@@ -93,7 +93,7 @@ func (h *HashTable) normalizeIndex(hash int) (idx int){
 	return (hash & 0x7FFFFFFF) % 10
 }
 
-func (h *HashTable) Insert(key types.Value, val interface{}) error {
+func (h *HashTable) Insert(key types.Value, val interface{}) {
 	entry := NewEntry(key, val, h.fn)
 	idx := h.normalizeIndex(entry.Hash)
 	if h.isOutOfBounds(idx) {
@@ -101,7 +101,6 @@ func (h *HashTable) Insert(key types.Value, val interface{}) error {
 	}
 	items := h.table[idx]
 	items.Append(val)
-	return nil
 }
 
 func (h *HashTable) clear() {
