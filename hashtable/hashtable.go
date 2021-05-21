@@ -2,10 +2,10 @@ package hashtable
 
 import (
 	"errors"
+	"github.com/arthurh0812/datastruct/types"
 	"sync"
 
 	"github.com/arthurh0812/datastruct/linkedlist"
-	"github.com/arthurh0812/datastruct/types"
 )
 
 var ErrInvalidKey = errors.New("key must not be nil")
@@ -16,7 +16,7 @@ var ErrInvalidHashFunction = errors.New("hash function must not be nil")
 // HashTable concrete data structure
 type HashTable struct {
 	fn Function // the hash function
-	table []*linkedlist.LinkedList
+	table table // the table consisting of rows
 	capacity, size int64
 	loadFactor float64 // the factor to multiply the capacity with when full
 
@@ -99,31 +99,34 @@ func (h *HashTable) decreaseSize() {
 }
 
 func (h *HashTable) isOutOfBounds(idx int) bool {
-	return idx < 0 || len(h.table)-1 < idx
+	return h.table.isOutOfBounds(idx)
+}
+
+// determines whether the table should be extended (depends on load factor)
+func (h *HashTable) shouldExtend(idx int) bool {
+	x := h.loadFactor * float64(h.size)
+	aim := int(x)
+	return idx >= aim
 }
 
 func (h *HashTable) normalizeIndex(hash int) (idx int){
 	return (hash & 0x7FFFFFFF) % 10
 }
 
-func (h *HashTable) Insert(key types.Value, val interface{}) (*Entry, error) {
-	if key == nil {
-		return nil, ErrInvalidKey
-	}
-	entry := NewEntry(key, val, h.fn)
-	idx := h.normalizeIndex(entry.Hash)
-	h.insertEntry(entry, idx)
-	return entry, nil
+func (h *HashTable) Keys() []types.Value {
+	keys := make([]types.Value, 0, h.size)
+	h.table.loop(func(e *Entry) {
+		keys = append(keys, e.Key)
+	})
+	return keys
 }
 
-// expects: e != nil && idx = normalized
-func (h *HashTable) insertEntry(e *Entry, idx int) {
-	if h.isOutOfBounds(idx) {
-		// increase hash table
-
-	}
-	items := h.table[idx]
-	items.Append(e.Val)
+func (h *HashTable) Values() []interface{} {
+	vals := make([]interface{}, 0, h.size)
+	h.table.loop(func(e *Entry) {
+		vals = append(vals, e.Val)
+	})
+	return vals
 }
 
 func (h *HashTable) clear() {
