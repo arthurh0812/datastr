@@ -3,20 +3,13 @@ package hashtable
 import "github.com/arthurh0812/datastruct/types"
 
 func (h *HashTable) find(key types.Value) *Entry {
-	idx := h.normalizeIndex(h.fn(key))
-	if h.isOutOfBounds(idx) {
-		return nil
-	}
-	items := h.table[idx]
-	for _, val := range items.Values() {
-		if entry, ok := val.(*Entry); ok && entry.Key.IsEqualTo(key) {
-			return entry
-		}
-	}
-	return nil
+	return h.table.getEntry(key, h.fn)
 }
 
 func (h *HashTable) Get(key types.Value) interface{} {
+	if key == nil {
+		return nil
+	}
 	e := h.find(key)
 	if e == nil {
 		return nil
