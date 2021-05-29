@@ -26,6 +26,7 @@ func (t table) getRowByIndex(idx int) *linkedlist.LinkedList {
 	return t[idx]
 }
 
+// time complexity depends on fn
 func (t table) getEntry(key types.Value, fn Function) *Entry {
 	idx := fn(key)
 	if t.isOutOfBounds(idx) {
@@ -40,7 +41,20 @@ func (t table) getEntry(key types.Value, fn Function) *Entry {
 	return nil
 }
 
-// O(n^2) time complexity
+
+// worst case: (O(n) ; n = number of values in table
+func (t table) getEntryByValue(val interface{}) *Entry {
+	for _, row := range t {
+		for _, e := range row.Values() {
+			if entry, ok := e.(*Entry); ok && entry.Val == val {
+				return entry
+			}
+		}
+	}
+	return nil
+}
+
+// O(n) time complexity
 func (t table) loop(cb func(e *Entry)) {
 	for _, row := range t {
 		for _, e := range row.Values() {

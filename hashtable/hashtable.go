@@ -63,6 +63,7 @@ func (h *HashTable) setFunction(fn Function) {
 	h.mu.Unlock()
 }
 
+// Only use is you are aware if you are certain that the keys are all of the same type.
 func (h *HashTable) SetFunction(fn Function) error {
 	if fn == nil {
 		return ErrInvalidHashFunction
